@@ -13,7 +13,7 @@ osTimerId myTimeoutTimerHandle;
 void read_state_timer_callbackfun(void const * argument)
 {
   /* USER CODE BEGIN read_state_timer_callbackfun */
-  printf("read_state now...\r\n");
+  LOG_INFO("read_state now...\r\n");
   read_state_timeout = true;
   /* USER CODE END read_state_timer_callbackfun */
 }
@@ -37,7 +37,7 @@ void clean_state_timeout(){
 void read_timeout_timer_callbackfun(void const * argument)
 {
   /* USER CODE BEGIN read_state_timer_callbackfun */
-  printf("´¥·¢´òÓ¡³¬Ê±´íÎó...\r\n");
+  LOG_INFO("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½...\r\n");
   printer_timeout = true;
   /* USER CODE END read_state_timer_callbackfun */
 }

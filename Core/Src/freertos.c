@@ -6,8 +6,8 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
   *
   * This software component is licensed by ST under Ultimate Liberty license
   * SLA0044, the "License"; You may not use this file except in compliance with
@@ -26,7 +26,16 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
+#include "LED.h"
+#include "KEY.h"
+#include "POWER.h"
+#include "em_adc.h"
+#include "BLE.h"
+#include "stdio.h"
+#include "usart.h"
+#include "motor.h"
+#include "printer.h"
+#include "mytask.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,26 +45,30 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
 /* USER CODE END Variables */
-osThreadId defaultTaskHandle;
+/* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void const * argument);
+void StartDefaultTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -98,7 +111,13 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
+  LED_Init();  
+  motor_init();
+  printer_init();
+  HAL_GPIO_WritePin(VH_EN_GPIO_Port,VH_EN_Pin,GPIO_PIN_RESET);
+  HAL_Delay(30000);
+  init_ble();
+   task_init();
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -118,13 +137,23 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* creation of defaultTask */
+  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
+   xTaskCreate(task_printer,"printer_task",128*2,NULL,osPriorityNormal+1,NULL);
+   xTaskCreate(task_dev_check,"dev_task",128*2,NULL,osPriorityNormal,NULL);
+   xTaskCreate(task_led,"led_task",80,NULL,osPriorityNormal,NULL);
+   xTaskCreate(task_key,"key_task",128,NULL,osPriorityNormal,NULL);
+
+   
+   //xTaskCreate(task_system,"system_task",128,NULL,osPriorityNormal,NULL);  //系统优化任务
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_EVENTS */
+  /* add events, ... */
+  /* USER CODE END RTOS_EVENTS */
 
 }
 
@@ -135,13 +164,28 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+
   /* Infinite loop */
   for(;;)
-  {
-    osDelay(1);
+  { 
+    /*
+    if(Paper_Detection() == 1)
+    {
+      LOG_INFO("缺纸\n");
+    }else
+    {
+      LOG_INFO("不缺纸\n");
+    }
+    uint8_t power;
+    float temp;
+    get_power_temp(&power,&temp);
+    LOG_INFO("电压�?????:%d  温度�?????:%f度\n",power,temp);
+    */
+   LOG_INFO("pinter run\n");
+    
   }
   /* USER CODE END StartDefaultTask */
 }

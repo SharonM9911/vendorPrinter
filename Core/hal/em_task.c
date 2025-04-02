@@ -9,7 +9,7 @@ bool is_long_click_start = false;
 
 void key_click_handle()
 {
-    printf("Button µ¥»÷!\n");
+    LOG_INFO("Button ï¿½ï¿½ï¿½ï¿½!\n");
     printer_test = true;
     // read_all_hal();
 }
@@ -19,16 +19,16 @@ void key_long_click_handle()
 		if(is_long_click_start == true)
 			return;
 		is_long_click_start = true;
-    printf("Button ³¤°´!\n");
+    LOG_INFO("Button ï¿½ï¿½ï¿½ï¿½!\n");
     device_state_t *pdevice = get_device_state();
     bool need_beep = false;
-    // ²»È±Ö½ÇÒ²»ÔÚ´òÓ¡ÖÐ²ÅÖ´ÐÐ
+    // ï¿½ï¿½È±Ö½ï¿½Ò²ï¿½ï¿½Ú´ï¿½Ó¡ï¿½Ð²ï¿½Ö´ï¿½ï¿½
     if (pdevice->paper_state == PAPER_STATUS_NORMAL)
     {
         if (pdevice->printer_state == PRINTER_STATUS_FINISH ||
             pdevice->printer_state == PRINTER_STATUS_INIT)
         {
-            printf("¿ªÊ¼×ßÖ½\n");
+            LOG_INFO("ï¿½ï¿½Ê¼ï¿½ï¿½Ö½\n");
             motor_start();
         }
         else
@@ -48,13 +48,13 @@ void key_long_click_handle()
 void key_long_click_free_handle()
 {
 		is_long_click_start = false;
-    printf("Í£Ö¹×ßÖ½\n");
+    LOG_INFO("Í£Ö¹ï¿½ï¿½Ö½\n");
     motor_stop();
 }
 
 
 /**
- * @brief ´¦ÀíÉÏ±¨Ïà¹ØÊÂ¼þ
+ * @brief ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
  *
  */
 void run_report()
@@ -65,20 +65,20 @@ void run_report()
         read_all_hal();
         if (get_ble_connect())
         {
-						printf("report device status:report time up\n");
+						LOG_INFO("report device status:report time up\n");
             ble_report();
         }
     }
     if (read_paper_irq_need_report_status())
     {
-        // È±Ö½ÖÐ¶Ï²úÉú£¬ÐèÒªÉÏ±¨
-        printf("report device status : paper irq\n");
+        // È±Ö½ï¿½Ð¶Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ï±ï¿½
+        LOG_INFO("report device status : paper irq\n");
         ble_report();
     }
 }
 
 /**
- * @brief ´¦Àí´òÓ¡Ïà¹ØÊÂ¼þ
+ * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
  *
  */
 void run_printer()
@@ -93,13 +93,13 @@ void run_printer()
                 pdevice->read_ble_finish = false;
                 pdevice->printer_state = PRINTER_STATUS_START;
                 ble_report();
-                printf("report device status : printing start %d\n",get_ble_rx_leftline());
+                LOG_INFO("report device status : printing start %d\n",get_ble_rx_leftline());
                 run_beep(BEEP_PRINTER_START);
                 run_led(LED_PRINTER_START);
             }
         }
     #else
-			// ½ÓÊÕ´óÓÚ100ÌõÊ±£¬²Å´¥·¢¿ªÊ¼´òÓ¡
+			// ï¿½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½100ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ó¡
 			if (get_ble_rx_leftline()> 200)
 			{
 					if (pdevice->printer_state == PRINTER_STATUS_FINISH ||
@@ -107,16 +107,16 @@ void run_printer()
 					{
 							pdevice->printer_state = PRINTER_STATUS_START;
 							ble_report();
-							printf("report device status : printing start\n");
+							LOG_INFO("report device status : printing start\n");
 							run_beep(BEEP_PRINTER_START);
 							run_led(LED_PRINTER_START);
 					}
 			}
 		#endif
-    // ¿ªÊ¼´òÓ¡
+    // ï¿½ï¿½Ê¼ï¿½ï¿½Ó¡
     if (pdevice->printer_state == PRINTER_STATUS_START)
     {
-        // Õý³£´òÓ¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡
         start_printing_by_queuebuf();
         pdevice->printer_state = PRINTER_STATUS_FINISH;
     }
@@ -125,7 +125,7 @@ void run_printer()
 void task_report(void *pvParameters)
 {
 		int count = 0;
-		printf("task_report init\n");
+		LOG_INFO("task_report init\n");
     for (;;) // A Task shall never return or exit.
     {
         run_report();
@@ -133,7 +133,7 @@ void task_report(void *pvParameters)
 				count ++;
 				if(count >= 50){
 					count = 0;
-					printf("task_report run\n");
+					LOG_INFO("task_report run\n");
 				}
     }
 }
@@ -141,15 +141,15 @@ void task_report(void *pvParameters)
 void task_button(void *pvParameters)
 {
 		int count = 0;
-		printf("task_button init\n");
+		LOG_INFO("task_button init\n");
     for (;;) // A Task shall never return or exit.
     {
-        key_check_run(); // ÐèÒªÖÜÆÚµ÷ÓÃ°´¼ü´¦Àíº¯Êý
+        key_check_run(); // ï¿½ï¿½Òªï¿½ï¿½ï¿½Úµï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         vTaskDelay(20);
 				count ++;
 				if(count >= 250){
 					count = 0;
-					printf("task_button run\n");
+					LOG_INFO("task_button run\n");
 				}
     }
 }
@@ -158,7 +158,7 @@ void task_printer(void *pvParameters)
 {
 		int count = 0;
 		init_ble();
-		printf("task_printer init\n");
+		LOG_INFO("task_printer init\n");
     for (;;) // A Task shall never return or exit.
     {
 				ble_status_data_clean();
@@ -171,7 +171,7 @@ void task_printer(void *pvParameters)
 				count ++;
 				if(count >= 5000){
 					count = 0;
-					printf("task_printer run\n");
+					LOG_INFO("task_printer run\n");
 				}
     }
 }
@@ -191,7 +191,7 @@ void task_printer(void *pvParameters)
 
 void init_task()
 {
-    printf("init_task\n");
+    LOG_INFO("init_task\n");
     init_device_state();
     init_timer();
     init_hal();
@@ -200,30 +200,30 @@ void init_task()
     init_key();
     init_printer();
     xTaskCreate(
-        task_report,  // ÈÎÎñº¯Êý
-        "TaskReport", // ÈÎÎñÃû
-        128,         // ÈÎÎñÕ»
-        NULL,         // ÈÎÎñ²ÎÊý
-        1,            // ÈÎÎñÓÅÏÈ¼¶, with 3 (configMAX_PRIORITIES - 1) ÊÇ×î¸ßµÄ£¬0ÊÇ×îµÍµÄ.
-        NULL          // ÈÎÎñ¾ä±ú
+        task_report,  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        "TaskReport", // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        128,         // ï¿½ï¿½ï¿½ï¿½Õ»
+        NULL,         // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        1,            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½, with 3 (configMAX_PRIORITIES - 1) ï¿½ï¿½ï¿½ï¿½ßµÄ£ï¿½0ï¿½ï¿½ï¿½ï¿½Íµï¿½.
+        NULL          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     );
 
     xTaskCreate(
-        task_button,  // ÈÎÎñº¯Êý
-        "TaskButton", // ÈÎÎñÃû
-        128,         // ÈÎÎñÕ»
-        NULL,         // ÈÎÎñ²ÎÊý
-        0,            // ÈÎÎñÓÅÏÈ¼¶, with 3 (configMAX_PRIORITIES - 1) ÊÇ×î¸ßµÄ£¬0ÊÇ×îµÍµÄ.
-        NULL          // ÈÎÎñ¾ä±ú
+        task_button,  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        "TaskButton", // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        128,         // ï¿½ï¿½ï¿½ï¿½Õ»
+        NULL,         // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        0,            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½, with 3 (configMAX_PRIORITIES - 1) ï¿½ï¿½ï¿½ï¿½ßµÄ£ï¿½0ï¿½ï¿½ï¿½ï¿½Íµï¿½.
+        NULL          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     );
 
     xTaskCreate(
-        task_printer,  // ÈÎÎñº¯Êý
-        "TaskPrinter", // ÈÎÎñÃû
-        256,          // ÈÎÎñÕ»
-        NULL,          // ÈÎÎñ²ÎÊý
-        2,             // ÈÎÎñÓÅÏÈ¼¶, with 3 (configMAX_PRIORITIES - 1) ÊÇ×î¸ßµÄ£¬0ÊÇ×îµÍµÄ.
-        NULL           // ÈÎÎñ¾ä±ú
+        task_printer,  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        "TaskPrinter", // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        256,          // ï¿½ï¿½ï¿½ï¿½Õ»
+        NULL,          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        2,             // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½, with 3 (configMAX_PRIORITIES - 1) ï¿½ï¿½ï¿½ï¿½ßµÄ£ï¿½0ï¿½ï¿½ï¿½ï¿½Íµï¿½.
+        NULL           // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     );
 }
 
