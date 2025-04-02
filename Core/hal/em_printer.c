@@ -2,16 +2,16 @@
 #include "em_timer.h"
 
 float addTime[6] = {0};
-// µãÊý-Ôö¼ÓÊ±¼äÏµÊý
+// ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ïµï¿½ï¿½
 #define kAddTime 0.001
-// ¸ù¾Ý´òÓ¡Í·Êµ¼Ê´òÓ¡Ð§¹ûÐÞ¸Ä´òÓ¡Ê±¼äÆ«ÒÆÖµ
+// ï¿½ï¿½ï¿½Ý´ï¿½Ó¡Í·Êµï¿½Ê´ï¿½Ó¡Ð§ï¿½ï¿½ï¿½Þ¸Ä´ï¿½Ó¡Ê±ï¿½ï¿½Æ«ï¿½ï¿½Öµ
 #define STB1_ADDTIME 0
 #define STB2_ADDTIME 0
 #define STB3_ADDTIME 0
 #define STB4_ADDTIME 0
 #define STB5_ADDTIME 0
 #define STB6_ADDTIME 0
-// ÈÈÃÜ¶È
+// ï¿½ï¿½ï¿½Ü¶ï¿½
 uint8_t heat_density = 64;
 
 
@@ -38,7 +38,7 @@ static void digitalWrite_vhen(int pin,int PinState){
 }
 
 /**
- * @brief Ê§ÄÜËùÓÐÍ¨µÀ
+ * @brief Ê§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
  *
  */
 static void set_stb_idle()
@@ -52,12 +52,12 @@ static void set_stb_idle()
 }
 
 /**
- * @brief ´òÓ¡Ç°³õÊ¼»¯
+ * @brief ï¿½ï¿½Ó¡Ç°ï¿½ï¿½Ê¼ï¿½ï¿½
  *
  */
 static void init_printing()
 {
-    // ¿ªÆô´òÓ¡³¬Ê±¼àÌý
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
     open_printer_timeout_timer();
     set_stb_idle();
     digitalWrite(PIN_LAT, HIGH);
@@ -66,12 +66,12 @@ static void init_printing()
 }
 
 /**
- * @brief ´òÓ¡ºóÍ£Ö¹
+ * @brief ï¿½ï¿½Ó¡ï¿½ï¿½Í£Ö¹
  *
  */
 static void stop_printing()
 {
-    // ¹Ø±Õ´òÓ¡³¬Ê±¼àÌý
+    // ï¿½Ø±Õ´ï¿½Ó¡ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
     close_printer_timeout_timer();
     // POWER OFF
     digitalWrite_vhen(PIN_VHEN, LOW);
@@ -80,13 +80,13 @@ static void stop_printing()
 }
 
 /**
- * @brief Set the heat density objectÃÜ¶ÈÉèÖÃ
+ * @brief Set the heat density objectï¿½Ü¶ï¿½ï¿½ï¿½ï¿½ï¿½
  *
  * @param density
  */
 void set_heat_density(uint8_t density)
 {
-    printf("´òÓ¡ÃÜ¶ÈÉèÖÃ %d\n", density);
+    LOG_INFO("ï¿½ï¿½Ó¡ï¿½Ü¶ï¿½ï¿½ï¿½ï¿½ï¿½ %d\n", density);
     heat_density = density;
 }
 
@@ -96,7 +96,7 @@ void clearAddTime()
 }
 
 /**
- * @brief ·¢ËÍÒ»ÐÐÊý¾Ý
+ * @brief ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  *
  * @param data
  */
@@ -121,7 +121,7 @@ static void send_one_line_data(uint8_t *data)
 }
 
 /**
- * @brief Í¨µÀ´òÓ¡ÔËÐÐ
+ * @brief Í¨ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½
  *
  * @param now_stb_num
  */
@@ -171,7 +171,7 @@ static void run_stb(uint8_t now_stb_num)
 }
 
 /**
- * @brief ÒÆ¶¯µç»ú&¿ªÊ¼´òÓ¡
+ * @brief ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½&ï¿½ï¿½Ê¼ï¿½ï¿½Ó¡
  *
  * @param need_stop
  * @param stbnum
@@ -180,20 +180,20 @@ bool move_and_start_std(bool need_stop, uint8_t stbnum)
 {
     if (need_stop == true)
     {
-				printf("´òÓ¡Í£Ö¹\n");
+				LOG_INFO("ï¿½ï¿½Ó¡Í£Ö¹\n");
         motor_stop();
         stop_printing();
         return true;
     }
-    // 4stepÒ»ÐÐ
+    // 4stepÒ»ï¿½ï¿½
     motor_run();
     if (stbnum == ALL_STB_NUM)
     {
-        // ËùÓÐÍ¨µÀ´òÓ¡
+        // ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ó¡
         for (uint8_t index = 0; index < 6; index++)
         {
             run_stb(index);
-            // °Ñµç»úÔËÐÐÐÅºÅ²åÈëÍ¨µÀ¼ÓÈÈÖÐ£¬¼õÉÙ´òÓ¡¿¨¶ÙºÍºÄÊ±
+            // ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÅºÅ²ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½Ù´ï¿½Ó¡ï¿½ï¿½ï¿½ÙºÍºï¿½Ê±
             if (index == 1 || index == 3 || index == 5)
             {
                 motor_run();
@@ -203,7 +203,7 @@ bool move_and_start_std(bool need_stop, uint8_t stbnum)
     }
     else
     {
-        // µ¥Í¨µÀ´òÓ¡
+        // ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ó¡
         run_stb(stbnum);
         motor_run_step(3);
     }
@@ -211,28 +211,28 @@ bool move_and_start_std(bool need_stop, uint8_t stbnum)
 }
 
 /**
- * @brief ´òÓ¡´íÎó¼ì²é
+ * @brief ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
- * @param need_report ÊÇ·ñÐèBLEÉÏ±¨
- * @return true ´òÓ¡³ö´í
- * @return false ´òÓ¡Õý³£
+ * @param need_report ï¿½Ç·ï¿½ï¿½ï¿½BLEï¿½Ï±ï¿½
+ * @return true ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½
+ * @return false ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½
  */
 bool printing_error_check(bool need_report)
 {
     if (get_printer_timeout_status())
     {
-				printf("´òÓ¡³¬Ê±\n");
+				LOG_INFO("ï¿½ï¿½Ó¡ï¿½ï¿½Ê±\n");
         return true;
     }
     if (get_device_state()->paper_state == PAPER_STATUS_LACK)
     {
         if(need_report){
-            // Í£Ö¹´òÓ¡
+            // Í£Ö¹ï¿½ï¿½Ó¡
             clean_printbuffer();
             ble_report();
         }
-        // Í£Ö¹´òÓ¡
-        printf("È±Ö½\n");
+        // Í£Ö¹ï¿½ï¿½Ó¡
+        LOG_INFO("È±Ö½\n");
         run_beep(BEEP_WARN);
 				run_led(LED_WARN);
         return true;
@@ -240,12 +240,12 @@ bool printing_error_check(bool need_report)
     if (get_device_state()->temperature > 65)
     {
         if(need_report){
-            // Í£Ö¹´òÓ¡
+            // Í£Ö¹ï¿½ï¿½Ó¡
             clean_printbuffer();
             ble_report();
         }
-        // Í£Ö¹´òÓ¡
-        printf("ÎÂ¶ÈÒì³£\n");
+        // Í£Ö¹ï¿½ï¿½Ó¡
+        LOG_INFO("ï¿½Â¶ï¿½ï¿½ì³£\n");
         run_beep(BEEP_WARN);
 				run_led(LED_WARN);
         return true;
@@ -255,10 +255,10 @@ bool printing_error_check(bool need_report)
 
 
 /**
- * @brief Êý×é´òÓ¡
+ * @brief ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡
  *
  * @param data
- * @param length Êý¾Ý³¤¶È±ØÐëÊÇÕûÐÐ 48*n
+ * @param length ï¿½ï¿½ï¿½Ý³ï¿½ï¿½È±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 48*n
  */
 void start_printing(uint8_t *data, uint32_t len)
 {
@@ -270,7 +270,7 @@ void start_printing(uint8_t *data, uint32_t len)
     {
         if (len > offset)
         {
-            // ·¢ËÍÒ»ÐÐÊý¾Ý 48byte*8=384bit
+            // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 48byte*8=384bit
             send_one_line_data(ptr);
             offset += TPH_DI_LEN;
             ptr += TPH_DI_LEN;
@@ -284,11 +284,11 @@ void start_printing(uint8_t *data, uint32_t len)
     }
     motor_run_step(40);
     motor_stop();
-    printf("´òÓ¡Íê³É\n");
+    LOG_INFO("ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½\n");
 }
 
 /**
- * @brief ¿É±ä¶ÓÁÐ´òÓ¡
+ * @brief ï¿½É±ï¿½ï¿½ï¿½Ð´ï¿½Ó¡
  *
  */
 void start_printing_by_queuebuf()
@@ -300,7 +300,7 @@ void start_printing_by_queuebuf()
     {
         if (get_ble_rx_leftline() > 0)
         {
-            // printf("printing...\n");
+            // LOG_INFO("printing...\n");
             pdata = read_to_printer();
             if (pdata != NULL)
             {
@@ -323,11 +323,11 @@ void start_printing_by_queuebuf()
     motor_run_step(140);
     motor_stop();
     clean_blepack_count();
-    printf("printer finish !!! read=%d printer:%d\n",get_blepack_count(),printer_count);
+    LOG_INFO("printer finish !!! read=%d printer:%d\n",get_blepack_count(),printer_count);
 }
 
 /**
- * @brief µ¥Í¨µÀÊý×é´òÓ¡
+ * @brief ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡
  *
  * @param stbnum
  * @param data
@@ -341,10 +341,10 @@ void start_printing_by_onestb(uint8_t stbnum, uint8_t *data, uint32_t len)
     init_printing();
     while (1)
     {
-        printf("printer %d\n", offset);
+        LOG_INFO("printer %d\n", offset);
         if (len > offset)
         {
-            // ·¢ËÍÒ»ÐÐÊý¾Ý 48byte*8=384bit
+            // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 48byte*8=384bit
             send_one_line_data(ptr);
             offset += TPH_DI_LEN;
             ptr += TPH_DI_LEN;
@@ -358,10 +358,10 @@ void start_printing_by_onestb(uint8_t stbnum, uint8_t *data, uint32_t len)
         if(printing_error_check(false))
             break;
     }
-		printf("printer end\n");
+		LOG_INFO("printer end\n");
     motor_run_step(40);
     motor_stop();
-		printf("printer end2\n");
+		LOG_INFO("printer end2\n");
 }
 
 static void setDebugData(uint8_t *print_data)
@@ -376,7 +376,7 @@ void testSTB()
 {
     uint8_t print_data[48 * 6];
     uint32_t print_len;
-    printf("¿ªÊ¼´òÓ¡´òÓ¡Í·Ñ¡Í¨Òý½Å²âÊÔ\nË³Ðò: 1  2  3  4  5  6");
+    LOG_INFO("ï¿½ï¿½Ê¼ï¿½ï¿½Ó¡ï¿½ï¿½Ó¡Í·Ñ¡Í¨ï¿½ï¿½ï¿½Å²ï¿½ï¿½ï¿½\nË³ï¿½ï¿½: 1  2  3  4  5  6");
     print_len = 48 * 5;
     setDebugData(print_data);
     start_printing_by_onestb(0, print_data, print_len);
@@ -390,7 +390,7 @@ void testSTB()
     start_printing_by_onestb(4, print_data, print_len);
     setDebugData(print_data);
     start_printing_by_onestb(5, print_data, print_len);
-    printf("²âÊÔÍê³É");
+    LOG_INFO("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 }
 
 void init_printer()

@@ -1,7 +1,7 @@
 #include "em_button.h"
 #include "em_task.h"
 
-//短按时间为 < 1s
+//锟教帮拷时锟斤拷为 < 1s
 #define SHORT_PRESS_TIME 1000
 
 bool keyIsPress = false;
@@ -29,18 +29,18 @@ void key_check_run(){
   if(keyIsPress == true){
     if(digitalRead(PIN_KEY) == HIGH){
       if(millis() - clicktime > SHORT_PRESS_TIME){
-        //printf("long click free\n");
+        //LOG_INFO("long click free\n");
         key_long_click_free_handle();
         longPressIsStart = false;
       }else{
-        //printf("short click\n");
+        //LOG_INFO("short click\n");
         key_click_handle();
       }
       keyIsPress = false;
     }else{
       if(millis() - clicktime > SHORT_PRESS_TIME){
         if(longPressIsStart == false){
-          //printf("long click\n");
+          //LOG_INFO("long click\n");
           key_long_click_handle();
           longPressIsStart = true;
         }
@@ -51,6 +51,6 @@ void key_check_run(){
 
 void init_key()
 {
-    //已经在stm32cubemx配置初始化
+    //锟窖撅拷锟斤拷stm32cubemx锟斤拷锟矫筹拷始锟斤拷
 }
 

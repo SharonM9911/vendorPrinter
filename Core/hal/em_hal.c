@@ -2,9 +2,9 @@
 #include "em_adc.h"
 #include "main.h"
 
-int freq = 2000;    //ÉèÖÃÆµÂÊ2000kHz
-int channel = 0;    //Í¨µÀºÅ£¬È¡Öµ0 ~ 15
-int resolution = 8; //·Ö±æÂÊ£¬È¡Öµ0~20£¬Õ¼¿Õ±Èduty×î´óÈ¡ÖµÎª2^resolution-1
+int freq = 2000;    //ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½2000kHz
+int channel = 0;    //Í¨ï¿½ï¿½ï¿½Å£ï¿½È¡Öµ0 ~ 15
+int resolution = 8; //ï¿½Ö±ï¿½ï¿½Ê£ï¿½È¡Öµ0~20ï¿½ï¿½Õ¼ï¿½Õ±ï¿½dutyï¿½ï¿½ï¿½È¡ÖµÎª2^resolution-1
 
 bool need_report = false;
 
@@ -34,13 +34,13 @@ void read_battery()
 		get_device_state()->battery = map(get_adc_volts()*2,3300,4200,0,100);
 	  if(get_device_state()->battery > 100)
       get_device_state()->battery = 100;
-    printf("battery = %d\n",get_device_state()->battery);
+    LOG_INFO("battery = %d\n",get_device_state()->battery);
 }
 
 void read_temperature()
 {
     float temperatrue = get_adc_temperatrue();
-    printf("temperature = %f\n",temperatrue);
+    LOG_INFO("temperature = %f\n",temperatrue);
     if(temperatrue >= EPISON){
         get_device_state()->temperature = temperatrue;
     }else{
@@ -91,7 +91,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin & GPIO_PIN_8)
 	{
-		printf("--");
+		LOG_INFO("--");
     need_report = true;
     set_device_paper_status(PAPER_STATUS_LACK);
 	}
@@ -104,7 +104,7 @@ void read_paper_statue()
     }else{
         get_device_state()->paper_state = PAPER_STATUS_LACK;
     }
-    printf("paper_state = %d\n",get_device_state()->paper_state);
+    LOG_INFO("paper_state = %d\n",get_device_state()->paper_state);
 }
 
 bool read_paper_irq_need_report_status()
@@ -127,7 +127,7 @@ void read_all_hal()
 
 void init_hal()
 {
-    //È±Ö½IO³õÊ¼»¯
+    //È±Ö½IOï¿½ï¿½Ê¼ï¿½ï¿½
     // pinMode(PIN_PAPER, INPUT);
     // attachInterrupt(PIN_PAPER, paper_isr, RISING);
 	

@@ -7,13 +7,13 @@ uint32_t packcount = 0;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart1;
 
-// ¶¨ÒåÒ»¸ö×Ö·û´®
+// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 char *ble_in_at_mode = "+++";
-char *ble_set_status = "AT+STATUS=0\r\n"; //¹Ø±ÕÉè±¸×´Ì¬ÏÔÊ¾
-char *ble_query_status = "AT+STATUS?\r\n"; //¹Ø±ÕÉè±¸×´Ì¬ÏÔÊ¾
+char *ble_set_status = "AT+STATUS=0\r\n"; //ï¿½Ø±ï¿½ï¿½è±¸×´Ì¬ï¿½ï¿½Ê¾
+char *ble_query_status = "AT+STATUS?\r\n"; //ï¿½Ø±ï¿½ï¿½è±¸×´Ì¬ï¿½ï¿½Ê¾
 char *ble_query_name = "AT+NAME?\r\n"; //AT+NAME=RF-CRAZY\r\nOK
-char *ble_set_name = "AT+NAME=Mini-Printer\r\n"; //OK ´óÐ´£¿
-//char *ble_set_name = "AT+NAME=RF-CRAZY\r\n"; //OK ´óÐ´£¿
+char *ble_set_name = "AT+NAME=Mini-Printer\r\n"; //OK ï¿½ï¿½Ð´ï¿½ï¿½
+//char *ble_set_name = "AT+NAME=RF-CRAZY\r\n"; //OK ï¿½ï¿½Ð´ï¿½ï¿½
 char *ble_out_at_mode = "AT+EXIT\r\n";
 
 typedef enum{
@@ -98,7 +98,7 @@ void uart_cmd_handle(uint8_t data){
                                         }
                                  if(cmd_buffer[0] == 0xA6 && cmd_buffer[1] == 0xA6 && cmd_buffer[2] == 0xA6 && cmd_buffer[3] == 0xA6){
                                                 set_read_ble_finish(true);
-                                                printf("---->read finish 1 = %d\n",packcount);
+                                                LOG_INFO("---->read finish 1 = %d\n",packcount);
                                                 cmd_index = 0;
 																								memset(cmd_buffer,0,sizeof(cmd_buffer));
                                                 return;
@@ -107,7 +107,7 @@ void uart_cmd_handle(uint8_t data){
 												if(cmd_index >= 5){
 													if(cmd_buffer[cmd_index-1] == 0x01){
 														if(cmd_buffer[cmd_index-2] == 0xA6 && cmd_buffer[cmd_index-3] == 0xA6 && cmd_buffer[cmd_index-4] == 0xA6 && cmd_buffer[cmd_index-5] == 0xA6){
-															printf("---->read finish 2 = %d\n",packcount);
+															LOG_INFO("---->read finish 2 = %d\n",packcount);
 															cmd_index = 0;
 															memset(cmd_buffer,0,sizeof(cmd_buffer));
 															set_read_ble_finish(true);
@@ -121,7 +121,7 @@ void uart_cmd_handle(uint8_t data){
                                 write_to_printbuffer(cmd_buffer,cmd_index);
                                 cmd_index = 0;
                                 memset(cmd_buffer,0,sizeof(cmd_buffer));
-																//printf("packcount = %d\n",packcount);
+																//LOG_INFO("packcount = %d\n",packcount);
 													
                         }
         }else{
@@ -174,45 +174,45 @@ void init_ble()
 												retry_count ++;
                         vTaskDelay(50);
                         if(g_ble_init_step == BLE_INIT_START || g_ble_init_step == BLE_IN_AT_MODE){
-																printf("BLE:Õý½øÈëATÄ£Ê½\n");
+																LOG_INFO("BLE:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ATÄ£Ê½\n");
                                 HAL_UART_Transmit(&huart2, (uint8_t*)ble_in_at_mode, strlen(ble_in_at_mode), 0xffff);
                                 g_ble_init_step = BLE_IN_AT_MODE;
                         }else if(g_ble_init_step == BLE_IN_AT_MODE_SUCCESS || g_ble_init_step == BLE_CLOSE_STATUS){
-																printf("BLE:ÕýÉèÖÃstatusÎª0 ¹Ø±Õ×´Ì¬ÏÔÊ¾\n");
+																LOG_INFO("BLE:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½statusÎª0 ï¿½Ø±ï¿½×´Ì¬ï¿½ï¿½Ê¾\n");
                                 HAL_UART_Transmit(&huart2, (uint8_t*)ble_set_status, strlen(ble_set_status), 0xffff);
                                 g_ble_init_step = BLE_CLOSE_STATUS;
                         }else if(g_ble_init_step == BLE_CLOSE_STATUS_SUCCESS || g_ble_init_step == BLE_QUERY_STATUS){
-																printf("BLE:Õý²éÑ¯×´Ì¬ÊÇ·ñÎª0\n");
+																LOG_INFO("BLE:ï¿½ï¿½ï¿½ï¿½Ñ¯×´Ì¬ï¿½Ç·ï¿½Îª0\n");
                                 HAL_UART_Transmit(&huart2, (uint8_t*)ble_query_status, strlen(ble_query_status), 0xffff);
                                 g_ble_init_step = BLE_QUERY_STATUS;
                         }else if(g_ble_init_step == BLE_QUERY_STATUS0_SUCCESS || g_ble_init_step == BLE_QUERY_NAME){
-																printf("BLE:Õý²éÑ¯Éè±¸Ãû³Æ\n");
+																LOG_INFO("BLE:ï¿½ï¿½ï¿½ï¿½Ñ¯ï¿½è±¸ï¿½ï¿½ï¿½ï¿½\n");
                                 HAL_UART_Transmit(&huart2, (uint8_t*)ble_query_name, strlen(ble_query_name), 0xffff);
                                 g_ble_init_step = BLE_QUERY_NAME;
                         }
 												else if(g_ble_init_step == BLE_NEED_SET_NAME || g_ble_init_step == BLE_SET_NAME){
-																printf("BLE:ÕýÉèÖÃÉè±¸Ãû³Æ\n");
+																LOG_INFO("BLE:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½\n");
                                 HAL_UART_Transmit(&huart2, (uint8_t*)ble_set_name, strlen(ble_set_name), 0xffff);
                                 g_ble_init_step = BLE_SET_NAME;
                                 need_reboot_ble = true;
                         }else if(g_ble_init_step == BLE_SET_NAME_SUCCESS || g_ble_init_step == BLE_NONEED_SET_NAME || g_ble_init_step == BLE_OUT_AT_MODE){
-																printf("BLE:ÕýÍË³öATÄ£Ê½\n");
+																LOG_INFO("BLE:ï¿½ï¿½ï¿½Ë³ï¿½ATÄ£Ê½\n");
                                 HAL_UART_Transmit(&huart2, (uint8_t*)ble_out_at_mode, strlen(ble_out_at_mode), 0xffff);
                                 g_ble_init_step = BLE_OUT_AT_MODE;
                         }else if(g_ble_init_step == BLE_INIT_FINISH){
                                 break;
                         }else if(g_ble_init_step == BLE_RESET){
-																printf("BLE:BLE RESET ÍË³öATÄ£Ê½\n");
+																LOG_INFO("BLE:BLE RESET ï¿½Ë³ï¿½ATÄ£Ê½\n");
 																HAL_UART_Transmit(&huart2, (uint8_t*)ble_out_at_mode, strlen(ble_out_at_mode), 0xffff);
                                 
 												}
-												printf("g_ble_init_step = %d\n",g_ble_init_step);
+												LOG_INFO("g_ble_init_step = %d\n",g_ble_init_step);
 												run_led(LED_BLE_INIT);
                 }
                 if(need_reboot_ble){
-                        printf("ÅäÖÃÍê³É-ÇëÖØÆôÉè±¸Ê¹ÓÃ\n");
+                        LOG_INFO("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸Ê¹ï¿½ï¿½\n");
                 }else{
-                        printf("ÅäÖÃÍê³É-¿ÉÒÔÕý³£Ê¹ÓÃ\n");
+                        LOG_INFO("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½\n");
 												
                 }
 								vTaskDelay(1000);
@@ -220,12 +220,12 @@ void init_ble()
 								memset(cmd_buffer,0,sizeof(cmd_buffer));
 }
 
-//Õâ²½²Ù×÷ÊÇÒòÎª³§¼ÒµÄÀ¶ÑÀÄ£×é£¬ÏÖÔÚstatusÖ»¹ØÁËbusy¡¢connect timeout¡¢device start¡¢wake up
-//ËùÒÔÐèÒª°ÑCONNECTED DISCONNECTED DEVICE ERRORÕâÐ©ÒµÎñÎÞ¹ØÊý¾ÝÇåµô
+//ï¿½â²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½é£¬ï¿½ï¿½ï¿½ï¿½statusÖ»ï¿½ï¿½ï¿½ï¿½busyï¿½ï¿½connect timeoutï¿½ï¿½device startï¿½ï¿½wake up
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½CONNECTED DISCONNECTED DEVICE ERRORï¿½ï¿½Ð©Òµï¿½ï¿½ï¿½Þ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void ble_status_data_clean(){
 	if(need_clean_ble_status){
 		vTaskDelay(200);
-		printf("clean --->%s\n",cmd_buffer);
+		LOG_INFO("clean --->%s\n",cmd_buffer);
 		cmd_index = 0;
 		memset(cmd_buffer,0,sizeof(cmd_buffer));
 		need_clean_ble_status = false;

@@ -174,17 +174,17 @@ void StartDefaultTask(void *argument)
     /*
     if(Paper_Detection() == 1)
     {
-      printf("缺纸\n");
+      LOG_INFO("缺纸\n");
     }else
     {
-      printf("不缺纸\n");
+      LOG_INFO("不缺纸\n");
     }
     uint8_t power;
     float temp;
     get_power_temp(&power,&temp);
-    printf("电压�?????:%d  温度�?????:%f度\n",power,temp);
+    LOG_INFO("电压�?????:%d  温度�?????:%f度\n",power,temp);
     */
-   printf("pinter run\n");
+   LOG_INFO("pinter run\n");
     
   }
   /* USER CODE END StartDefaultTask */

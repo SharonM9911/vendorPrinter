@@ -28,6 +28,3 @@ void debug_isr_log(const char* msg);
 #define LOG_ERR(fmt, ...) debug_log(LOG_LEVEL_ERROR, fmt, ##__VA_ARGS__)
 #define LOG_INFO(fmt, ...) debug_log(LOG_LEVEL_INFO, fmt, ##__VA_ARGS__)
 #endif
-
-#define LOG(level, ...) \
-    do { if(level >= LOG_LEVEL) SEGGER_RTT_printf(0, __VA_ARGS__); } while(0)
