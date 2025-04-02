@@ -31,7 +31,7 @@
 #include "stdio.h"
 #include "em_task.h"
 /* USER CODE END Includes */
-
+#include "SEGGER_RTT.h"
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
@@ -100,6 +100,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
+  SEGGER_RTT_Init(); // Initialize SEGGER RTT
+  SEGGER_RTT_WriteString(0,"\n\033[36m[INFO]System Init Success! \033[0m\n"); // Print message to RTT terminal]")
   /* USER CODE BEGIN 2 */
      HAL_UART_Receive_IT(&huart2, (uint8_t *)&ble_aRxBuffer, 1);
      HAL_UART_Receive_IT(&huart1, (uint8_t *)&serial_aRxBuffer, 1);
@@ -121,7 +123,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+    static int count = 0;
+    SEGGER_RTT_printf(0, "\n\033[36m[INFO]System Running %d \033[0m\n", count++); // Print message to RTT terminal
+    HAL_Delay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
