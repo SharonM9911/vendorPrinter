@@ -21,8 +21,11 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-#include "em_ble.h"
-uint8_t aRxBuffer;	
+#include "stdio.h"
+#include "BLE.h"
+#include "serial.h"
+uint8_t ble_aRxBuffer;	
+uint8_t serial_aRxBuffer;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -45,8 +48,8 @@ void MX_USART1_UART_Init(void)
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX | UART_MODE_HARDWARE_FLOW_CONTROL;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_RTS_CTS;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart1) != HAL_OK)
   {
@@ -56,6 +59,22 @@ void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 2 */
 
+}
+// 在MX_USART1_UART_Init()后添加
+void USART1_Comm_Init(void) {
+  // 启用DMA发送
+  hdma_usart1_tx.Instance = DMA1_Channel4;
+  hdma_usart1_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+  hdma_usart1_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+  hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
+  hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+  hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+  hdma_usart1_tx.Init.Mode = DMA_NORMAL;
+  HAL_DMA_Init(&hdma_usart1_tx);
+  __HAL_LINKDMA(&huart1, hdmatx, hdma_usart1_tx);
+
+  // 启用接收中断
+  HAL_UART_Receive_IT(&huart1, &serial_rx_byte, 1);
 }
 /* USART2 init function */
 
