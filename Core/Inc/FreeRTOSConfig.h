@@ -66,6 +66,8 @@
 #define configUSE_MUTEXES                        1
 #define configQUEUE_REGISTRY_SIZE                8
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION  1
+#define portBYTE_ALIGNMENT 8                      // Cortex-M3必须为8
+#define portSTACK_GROWTH (-1)                     // 向下生长的栈
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES                    0
@@ -132,5 +134,9 @@ standard names. */
 /* USER CODE BEGIN Defines */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
 /* USER CODE END Defines */
-
+#define configUSE_SEGGER_RTT 1
+extern void SEGGER_RTT_LOCK(void);
+extern void SEGGER_RTT_UNLOCK(void);
+#define portENTER_CRITICAL() {taskEnterCritical(); SEGGER_RTT_LOCK();}
+#define portEXIT_CRITICAL() {SEGGER_RTT_UNLOCK(); taskExitCritical();}
 #endif /* FREERTOS_CONFIG_H */
